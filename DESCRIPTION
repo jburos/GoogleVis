@@ -27,7 +27,7 @@ BugReports:
         http://code.google.com/p/google-motion-charts-with-r/issues/list
 LazyLoad: yes
 LazyData: yes
-Packaged: 2013-07-09 20:47:21 UTC; jburos
+Packaged: 2013-05-25 12:14:44 UTC; Markus
 NeedsCompilation: no
 Repository: CRAN
 Date/Publication: 2013-05-25 18:21:36
