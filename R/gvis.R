@@ -19,9 +19,9 @@
 ### MA 02110-1301, USA
 
 
-gvisChart <- function(type, checked.data, options, chartid, package){
+gvisChart <- function(type, checked.data, options, chartid, package, formats = NULL){
   
-  Chart = gvis(type=type, checked.data, options=options, chartid=chartid, package)
+  Chart = gvis(type=type, checked.data, options=options, chartid=chartid, package, formats=formats)
   chartid <- Chart$chartid
   htmlChart <- Chart$chart
   
@@ -41,12 +41,12 @@ gvisChart <- function(type, checked.data, options, chartid, package){
   return(output)
 }
 
-gvis <- function(type="", data, options, chartid, package){
+gvis <- function(type="", data, options, chartid, package, formats=NULL){
 
   if( ! is.data.frame(data) ){
     stop("Data has to be a data.frame. See ?data.frame for more details.")
   }
-
+  
   ## we need a unique chart id to have more than one chart on the same page
   ## we use type and date to create the chart id
   if(missing(chartid)){
@@ -72,7 +72,27 @@ gvis <- function(type="", data, options, chartid, package){
 	paste(data.type[!checkTypes], collapse=", "),"\n", sep="", collapse=" ")
     stop(message)
   }  
-
+  
+  ## check for NumberFormat objects
+  ## formats will be a named list of strings. Names correspond to objects in the data frame.
+  jsFormats <- ''
+  if (!is.null(formats)) {
+    if (!inherits(formats,'list'))
+      warning('formats object exists but is not a list. Ignoring')
+    
+    if (!all(names(formats) %in% names(data))) 
+      warning('formats object contains names that do not exist in data.')
+    
+    for (idx in c(1:length(formats))) {
+      jsFormats <- paste(jsFormats
+                         , paste('  var dataFormat',idx,' = new google.visualization.NumberFormat({pattern:"',formats[idx],'"});',sep="")
+                         , paste('  dataFormat',idx,'.format(data, ', grep(names(data),pattern = names(formats[idx])) - 1,');',sep="")
+                         , sep = "\n"
+                         )
+    }
+    
+  }
+  
   jsHeader <- '
 <!-- jsHeader -->
 <script type="text/javascript">
@@ -153,11 +173,13 @@ function drawChart%s() {
 %s
 %s
 %s
+%s
 }
 %s  
 '
   jsDrawChart <- sprintf(jsDrawChart, chartid,  chartid,
                      paste(gvisOptions(options), collapse="\n"),
+                         jsFormats,
                      gvisNewChart(chartid,type,options),
                      gvisListener(chartid, type, options),
                      gvisEditor(chartid,type,options)

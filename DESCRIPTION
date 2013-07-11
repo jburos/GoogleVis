@@ -1,7 +1,7 @@
 Package: googleVis
 Type: Package
 Title: Interface between R and the Google Chart Tools
-Version: 0.4.3
+Version: 0.4.3.1
 Date: 2013-05-25
 Authors@R: c(person("Markus", "Gesmann", role = c("aut", "cre"), email
         = "markus.gesmann@gmail.com"), person("Diego", "de Castillo",
@@ -27,7 +27,7 @@ BugReports:
         http://code.google.com/p/google-motion-charts-with-r/issues/list
 LazyLoad: yes
 LazyData: yes
-Packaged: 2013-05-25 12:14:44 UTC; Markus
+Packaged: 2013-07-11 15:41:37 UTC; jburos
 NeedsCompilation: no
 Repository: CRAN
 Date/Publication: 2013-05-25 18:21:36
